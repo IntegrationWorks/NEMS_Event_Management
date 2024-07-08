@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,18 +14,18 @@ import lombok.Setter;
 @Setter
 public class TimeStampedMessage implements Serializable {
 
-    private String content;
+    private JsonNode content;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss:SSS")
     private Date timeStamp;
 
-    public TimeStampedMessage(String message) {
+    public TimeStampedMessage(JsonNode message) {
         this.content = message;
         this.timeStamp = new Date();
     }
 
     public TimeStampedMessage() {
-        this.content = "";
+        this.content = JsonNodeFactory.instance.objectNode();
         this.timeStamp = new Date();
     }
 }
