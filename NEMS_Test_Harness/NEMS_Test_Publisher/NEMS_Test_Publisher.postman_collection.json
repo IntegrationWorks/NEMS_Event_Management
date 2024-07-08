@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"topic\": \"root/nems/birth\",\r\n    \"payloadStrings\": [\r\n        \"John Doe\",\r\n        \"Jane Doe\",\r\n        \"Brad Default\",\r\n        \"Tallulah Testcase\"\r\n    ],\r\n    \"interval\": 3\r\n}",
+					"raw": "{\r\n    \"topic\": \"root/nems/birth\",\r\n    \"payload\": [{\r\n\t\t  \"nhi\": \"\",\r\n\t\t  \"birth_date\": \"3/29/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"\",\r\n\t\t  \"birth_date\": \"1/2/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"\",\r\n\t\t  \"birth_date\": \"3/31/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"\",\r\n\t\t  \"birth_date\": \"7/17/2023\"\r\n\t\t}],\r\n    \"interval\": 3\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -40,7 +40,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"topic\": \"root/nems/death\",\r\n    \"payloadStrings\": [\r\n        \"John Doe\",\r\n        \"Jane Doe\",\r\n        \"Brad Default\",\r\n        \"Tallulah Testcase\"\r\n    ],\r\n    \"interval\": 3\r\n}",
+					"raw": "{\r\n    \"topic\": \"root/nems/death\",\r\n    \"payload\": [{\r\n\t\t  \"nhi\": \"\",\r\n\t\t  \"death_date\": \"3/29/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"\",\r\n\t\t  \"death_date\": \"1/2/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"\",\r\n\t\t  \"death_date\": \"3/31/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"\",\r\n\t\t  \"death_date\": \"7/17/2023\"\r\n\t\t}],\r\n    \"interval\": 3\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -67,7 +67,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"topic\": \"root/nems/enrollment\",\r\n    \"payloadStrings\": [\r\n        \"John Doe\",\r\n        \"Jane Doe\",\r\n        \"Brad Default\",\r\n        \"Tallulah Testcase\"\r\n    ],\r\n    \"interval\": 3\r\n}",
+					"raw": "{\r\n    \"topic\": \"root/nems/enrollment\",\r\n    \"payload\": [{\r\n\t\t  \"nhi\": \"\",\r\n\t\t  \"facility_id\": \"1234\",\r\n\t\t  \"enrollment_date\": \"3/29/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"\",\r\n\t\t  \"facility_id\": \"6578\",\r\n\t\t  \"enrollment_date\": \"1/2/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"\",\r\n\t\t  \"facility_id\": \"1679\",\r\n\t\t  \"enrollment_date\": \"3/31/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"\",\r\n\t\t  \"facility_id\": \"3248\",\r\n\t\t  \"enrollment_date\": \"7/17/2023\"\r\n\t\t}],\r\n    \"interval\": 3\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
