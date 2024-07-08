@@ -127,22 +127,29 @@ Using Postman:
 2. Select the `Send Birth Event` Post request. In the `Body` tab, there is a json object with 3 fields that looks like this:
     ```json
     {
-        "topic": "root/nems/birth",
-        "payloadStrings": [
-            "John Doe",
-            "Jane Doe",
-            "Brad Default",
-            "Tallulah Testcase"
-        ],
-        "interval": 3
-    }
+    "topic": "root/nems/birth",
+    "payload": [{
+		  "nhi": "",
+		  "birth_date": "3/29/2024"
+		}, {
+		  "nhi": "",
+		  "birth_date": "1/2/2024"
+		}, {
+		  "nhi": "",
+		  "birth_date": "3/31/2024"
+		}, {
+		  "nhi": "",
+		  "birth_date": "7/17/2023"
+		}],
+    "interval": 3
+}
     ``` 
 
     You can change these fields as you see fit.
 
 3. Send the request. You should receive a 200 OK response and a response body echoing your request body's parameters: 
     ```
-    new Message(s) received:[John Doe, Jane Doe, Brad Default, Tallulah Testcase]
+    new Message(s) received:[{"nhi":"","birth_date":"3/29/2024"}, {"nhi":"","birth_date":"1/2/2024"}, {"nhi":"","birth_date":"3/31/2024"}, {"nhi":"","birth_date":"7/17/2023"}]
     to send to topic: 
     root/nems/birth
     with interval: 
@@ -162,14 +169,14 @@ Once the publisher received the event successfully, the events will be processed
 
 2. Observe the logs of the container, the final 8 lines should display the following (Note: the timestamps will be different from the ones below):
     ```
-    A message was received @ 2024-07-08 00:20:57:484
-    Content: John Doe
-    A message was received @ 2024-07-08 00:21:00:507
-    Content: Jane Doe
-    A message was received @ 2024-07-08 00:21:03:539
-    Content: Brad Default
-    A message was received @ 2024-07-08 00:21:06:546
-    Content: Tallulah Testcase
+    A message was received @ 2024-07-08 21:35:59:411
+    Content: {"nhi":"","birth_date":"3/29/2024"}
+    A message was received @ 2024-07-08 21:36:02:426
+    Content: {"nhi":"","birth_date":"1/2/2024"}
+    A message was received @ 2024-07-08 21:36:05:429
+    Content: {"nhi":"","birth_date":"3/31/2024"}
+    A message was received @ 2024-07-08 21:36:08:433
+    Content: {"nhi":"","birth_date":"7/17/2023"}
     ```
 
 3. You may repeat the instructions above using the `Send Death Event` and using the `docker container logs test-sub-death-queue` command, as well as the `Send Enrollment Event` and using the `docker container logs test-sub-enrollment-queue` command to verify the death and enrollment queues and associated subscriber microservices.
