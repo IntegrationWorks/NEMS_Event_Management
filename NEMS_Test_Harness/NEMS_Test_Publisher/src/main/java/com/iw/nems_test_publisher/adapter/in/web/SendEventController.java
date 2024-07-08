@@ -28,7 +28,7 @@ class SendPersonController {
     ResponseEntity<String> sendPerson(@Valid @RequestBody EventPayload eventPayload){
         sendEventUseCase.SendEventPayload(eventPayload);
         return new ResponseEntity<String>("new Message(s) received:" 
-                + Arrays.toString(eventPayload.getPayloadStrings()) + LS
+                + Arrays.toString(eventPayload.getPayload()) + LS
                 + "to send to topic: " + LS
                 +  eventPayload.getTopic() + LS
                 + "with interval: " + LS

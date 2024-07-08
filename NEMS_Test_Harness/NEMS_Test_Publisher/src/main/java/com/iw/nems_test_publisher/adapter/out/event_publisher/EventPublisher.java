@@ -3,6 +3,7 @@ package com.iw.nems_test_publisher.adapter.out.event_publisher;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iw.nems_test_publisher.adapter.out.event_publisher.util.EventUtil;
 import com.iw.nems_test_publisher.application.domain.model.EventPayload;
@@ -42,13 +43,13 @@ public class EventPublisher implements GetEventPort {
         return eventPayload;
     }
 
-    private void SendPayloadAsMessage(EventPayload payload) {
+    private void SendPayloadAsMessage(EventPayload inPayload) {
         OutboundMessageBuilder messageBuilder = messagingService.messageBuilder();
-        for(int i = 0; i < payload.getPayloadStrings().length; i++) {
+        for(int i = 0; i < inPayload.getPayload().length; i++) {
 
             // Take payload string, convert to timestamped message
-            String payloadString = payload.getPayloadStrings()[i];
-            TimeStampedMessage timeStampedMessage = new TimeStampedMessage(payloadString);
+            JsonNode payload = inPayload.getPayload()[i];
+            TimeStampedMessage timeStampedMessage = new TimeStampedMessage(payload);
 
             try {
                 // Map Object to json string
@@ -59,19 +60,19 @@ public class EventPublisher implements GetEventPort {
                 OutboundMessage message = messageBuilder.build(result);
 
                 //Logs message number out of total messages to be sent on thread
-                System.out.println("sending message #" + (i+1) + "/" + payload.getPayloadStrings().length);
+                System.out.println("sending message #" + (i+1) + "/" + inPayload.getPayload().length);
 
                 //publish message
-                publisher.publish(message, Topic.of(payload.getTopic()));
+                publisher.publish(message, Topic.of(inPayload.getTopic()));
             } catch (RuntimeException e) {
                 logger.warn("### Caught while trying to publisher.publish()",e);
             } catch (JsonProcessingException e){
 
             } finally {
-                if(i + 1 < payload.getPayloadStrings().length) {
+                if(i + 1 < inPayload.getPayload().length) {
                     try {
                         // Not a big fan of this, may change this at some point
-                        Thread.sleep((int)(1000 * payload.getInterval()));  // do Thread.sleep(0) for max speed
+                        Thread.sleep((int)(1000 * inPayload.getInterval()));  // do Thread.sleep(0) for max speed
                         // Note: STANDARD Edition Solace PubSub+ broker is limited to 10k msg/s max ingress
                     } catch (InterruptedException e) {
                         logger.warn("### Caught while trying to run Thread.sleep()",e);
