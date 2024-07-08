@@ -2,17 +2,18 @@ const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
 const axios = require('axios');
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 const pool = new Pool({
-  user: 'admin',
-  host: 'localhost',
-  database: 'eventsdb',
-  password: 'admin',
-  port: 5432,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 
 // Endpoint to fetch all events
@@ -75,26 +76,26 @@ app.put('/events/:id', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
-// Endpoint to send messages to the Solace broker
 app.post('/send-message', async (req, res) => {
   const { topic, payloadStrings, interval } = req.body;
 
   if (!Array.isArray(payloadStrings)) {
+    console.log('Invalid payloadStrings format:', payloadStrings);
     return res.status(400).json({ error: 'payloadStrings must be an array of strings' });
   }
 
-  const message = { 
-    topic, 
-    payloadStrings, 
-    interval: interval !== null ? interval : 0 // Default to 0 if interval is null 
+  const message = {
+    topic,
+    payloadStrings,
+    interval: interval !== null ? interval : 0 // Default to 0 if interval is null
   };
 
   try {
     console.log('Payload to Solace:', JSON.stringify(message, null, 2)); // Log the payload
-    const response = await axios.post('http://localhost:8080/', message, {
+    const response = await axios.post('127.0.0.1:8080/', message, {
       headers: { 'Content-Type': 'application/json' },
     });
+    console.log('Response from Solace:', response.status, response.data); // Log the response
     res.status(response.status).json(response.data);
   } catch (err) {
     console.error('Error sending message inside the backend:', err.message);
@@ -105,10 +106,12 @@ app.post('/send-message', async (req, res) => {
       console.error('Response headers:', err.response.headers);
       res.status(err.response.status).json({ error: err.response.data });
     } else {
+      console.error('No response received:', err.message);
       res.status(500).json({ error: 'Failed to send message inside the backend' });
     }
   }
 });
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

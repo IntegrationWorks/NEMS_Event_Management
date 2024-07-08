@@ -1,26 +1,31 @@
-version: '3.8'
+version: '3.9'
 
 services:
   frontend:
     build:
       context: ./frontend
+    container_name: event-app-frontend
     ports:
       - "3000:3000"
     networks:
       - event-network
+    env_file:
+      - .env
 
   backend:
     build:
       context: ./backend
+    container_name: event-app-backend
     ports:
-      - "5000:5000"
+      - "5001:5000"
     networks:
       - event-network
-    environment:
-      - NODE_ENV=development
-      - PORT=5000
+    env_file:
+      - .env
+    depends_on:
+      - postgres-db
 
-  postgres:
+  postgres-db:
     image: postgres:13
     container_name: postgres-db
     environment:
@@ -42,15 +47,15 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - "8082:80"
+      - "8083:80"
     depends_on:
-      - postgres
+      - postgres-db
     networks:
       - event-network
 
 networks:
   event-network:
-    external: true
+    driver: bridge
 
 volumes:
   postgres-data:

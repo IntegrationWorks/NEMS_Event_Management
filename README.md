@@ -1,73 +1,62 @@
-# Event App
+# NEMS_Event_Management
 
-This is a simple React application with a header and a Create Event page.
+### Overview
+The NEMS Event Management project consists of two primary components:
+the NEMS Test Harness and the React Event App. 
 
-# React Event App with PostgreSQL, pgAdmin, and Solace Integration
+The NEMS Test Harness is built with Hexagonal Architecture, combining a REST API and Event-Driven Architecture to send event objects to a Solace event broker. 
 
-This project sets up a React Event app with a PostgreSQL database, pgAdmin using Docker, and integrates with the Solace broker project.
+The React Event App is a simple React application with a header and a Create Event page, integrated with a PostgreSQL database, pgAdmin, and the Solace broker.
 
-## Setup Instructions
+### Setup and Pre-requisites
+If not already installed:
 
-### Step 1: Docker Setup
+Install the latest version of OpenJDK 17 on your device (OpenJDK downloads)
 
-1. Ensure Docker is installed on your machine.
+Install Docker on your device (Docker installation guide)
 
-### Step 2: Start the React Application
+Install Postman on your device
 
-In the project directory, run:
+Clone this repository or download the .zip file from GitHub and extract the downloaded zip file.
 
-```bash
+### Running the Event Broker
+Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository, then to the NEMS_Test_Harness directory.
+
+ ```
+docker-compose -f docker-compose_solace.yml up --build -d
+ ```
+
+ Running the Publisher Microservice
+Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository, then to the NEMS_Test_Harness directory.
+
+### To build the publisher application, change directory to /NEMS_Test_Publisher:
+```
+cd NEMS_Test_Publisher
+./mvnw clean package -DskipTests  # Linux/MacOs
+.\mvnw clean package -DskipTests  # Windows
+docker-compose -f docker-compose_publisher.yml up --build -d
+ ```
+ 
+### Running 3 Subscriber Microservices
+Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository, then to the NEMS_Test_Harness directory.
+
+To build the 3 subscriber applications, change directory to /NEMS_Test_Subscriber:
+
+```
+cd NEMS_Test_Subscriber
+./mvnw clean package -DskipTests  # Linux/MacOs
+.\mvnw clean package -DskipTests  # Windows
+docker-compose -f docker-compose_subscribers.yml up --build -d
+```
+
+### Running the React Event App
+Using a Command Line Interface of your choosing, change directory to the event-app directory.
+
+Run the following command to build and start the React app:
+```
 cd event-app
-npm install
-npm start
-   ```
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-
-### Step 3: Set Up Backend Server
-
-1. Open another terminal.
-2. Start the backend server:
-
-```bash
-cd backend
-npm install
-node index.js
-```
-### Step 4. Start the Docker containers
-
-```bash
-docker-compose up -d
-```
- The  init.sql file inside init-db directory has information of iitial SQL script.
-
-### Accessing pgAdmin
-
-1. Open your web browser and go to `http://localhost:8082`.
-2. Log in to pgAdmin with the following credentials:
-   - **Email**: admin@admin.com
-   - **Password**: admin
-3. Add a new server in pgAdmin with the following details:
-   - **Name**: PostgreSQL
-   - **Host**: postgres
-   - **Port**: 5432
-   - **Username**: admin
-   - **Password**: admin
-
-The `eventsdb` database should already contain an `events` table with one record.
-
-###  Step 5. Integrate with Solace Broker
-Clone the Solace broker project from the provided GitHub repository:
-```bash
-git clone https://github.com/mpirotaiswilton-IW/NEMS_Test_Harness.git
+docker-compose --build -d
 ```
 
-Follow the setup instructions in the Solace broker project's README to get it up and running.
+This setup will get both the NEMS Test Harness and the React Event App running, with integrations with the Solace broker, PostgreSQL database, and pgAdmin.
 
-Ensure the Solace broker is configured to accept messages from your backend server.
-
-
-With this setup, your React Event app project will include a PostgreSQL database, pgAdmin, all managed through Docker, a Node.js backend server to fetch data from the database and serve it to the React frontend, and integration with the Solace broker for message passing.

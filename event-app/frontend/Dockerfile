@@ -1,24 +1,20 @@
-# Stage 1: Build the React app
-FROM node:14 as build
-
-WORKDIR /usr/src/app
-
-COPY package*.json ./
-RUN npm install
-
-COPY . .
-
-RUN npm run build
-
-# Stage 2: Serve the app
+# Base image
 FROM node:14
 
+# Set working directory
 WORKDIR /usr/src/app
 
-COPY --from=build /usr/src/app/build ./build
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-RUN npm install -g serve
+# Install dependencies
+RUN npm install
 
+# Copy the rest of the application code
+COPY . .
+
+# Expose the port the app runs on
 EXPOSE 3000
 
-CMD ["serve", "-s", "build"]
+# Start the application
+CMD ["npm", "start"]

@@ -1,4 +1,3 @@
-// src/components/CreateEvent.js
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { toast, ToastContainer } from 'react-toastify';
@@ -22,7 +21,7 @@ function CreateEvent({ show, handleClose }) {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/events', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/events`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
