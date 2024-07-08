@@ -26,7 +26,7 @@
 
 ## Running the Event Broker
 
-1. Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository
+1. Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository, then to the `NEMS_Test_Harness` directory
 
 2. Run the following command: 
 
@@ -43,7 +43,7 @@
 
 ## Running the Publisher Microservice
 
-1. Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository
+1. Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository, then to the `NEMS_Test_Harness` directory
 
 
 2. To build the publisher application, change directory to `/NEMS_Test_Publisher`:
@@ -78,7 +78,7 @@
 
 ## Running 3 Subscriber Microservices
 
-1. Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository
+1. Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository, then to the `NEMS_Test_Harness` directory
 
 
 2. To build the 3 subscriber application, change directory to `/NEMS_Test_Subscriber`:
