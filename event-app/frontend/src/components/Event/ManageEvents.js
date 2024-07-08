@@ -19,13 +19,14 @@ function ManageEvents() {
   }, []);
 
   const fetchEvents = () => {
-    fetch('http://localhost:5000/events')
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/events`)
       .then(response => response.json())
       .then(data => {
         setEvents(data);
       })
       .catch(error => console.error('Error fetching events:', error));
   };
+  
 
   const handleNewEvent = () => {
     setShowCreateModal(true);
@@ -70,16 +71,26 @@ function ManageEvents() {
   const handlePublishSelected = async () => {
     setLoading(true);
     const selectedEventObjects = events.filter(event => selectedEvents.includes(event.id));
-    const messages = selectedEventObjects.map(event => ({
-      topic: event.taxonomy,
-      payloadStrings: [`Event ${event.name} published.`],
-      interval: 0,
-    }));
+
+    // Collect payload strings for all selected events
+    const payloadStrings = selectedEventObjects.flatMap(event => [
+      event.name,
+      event.description,
+      event.taxonomy,
+      event.version
+    ]);
+
+    const message = {
+      topic: selectedEventObjects[0]?.taxonomy || 'default/topic', 
+      payloadStrings: payloadStrings,
+      interval: 3, 
+    };
 
     try {
-      await Promise.all(messages.map(message => axios.post('http://solace:8085/send-message', message, {
+      console.log('Sending message:', message); // Add this line to debug
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/send-message`, message, {
         headers: { 'Content-Type': 'application/json' },
-      })));
+      });
       alert('Selected events published successfully!');
     } catch (err) {
       console.error('Error publishing messages:', err.message);

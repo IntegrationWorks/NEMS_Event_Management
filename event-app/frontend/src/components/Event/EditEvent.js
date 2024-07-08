@@ -1,4 +1,3 @@
-// src/components/EditEvent.js
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { toast, ToastContainer } from 'react-toastify';
@@ -10,7 +9,7 @@ function EditEvent({ show, handleClose, eventId }) {
 
   useEffect(() => {
     if (eventId) {
-      fetch(`http://localhost:5000/events/${eventId}`)
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/events/${eventId}`)
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -35,7 +34,7 @@ function EditEvent({ show, handleClose, eventId }) {
     };
 
     try {
-      const response = await fetch(`http://localhost:5000/events/${eventId}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/events/${eventId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
