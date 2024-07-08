@@ -1,0 +1,91 @@
+{
+	"info": {
+		"_postman_id": "141d37d8-6b37-410a-bf8f-f6c8265aa6b2",
+		"name": "NEMS_Test_Publisher",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31344529"
+	},
+	"item": [
+		{
+			"name": "Send Birth Event",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"topic\": \"root/nems/birth\",\r\n    \"payloadStrings\": [\r\n        \"John Doe\",\r\n        \"Jane Doe\",\r\n        \"Brad Default\",\r\n        \"Tallulah Testcase\"\r\n    ],\r\n    \"interval\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send Death Event",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"topic\": \"root/nems/death\",\r\n    \"payloadStrings\": [\r\n        \"John Doe\",\r\n        \"Jane Doe\",\r\n        \"Brad Default\",\r\n        \"Tallulah Testcase\"\r\n    ],\r\n    \"interval\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send Enrollment Event",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"topic\": \"root/nems/enrollment\",\r\n    \"payloadStrings\": [\r\n        \"John Doe\",\r\n        \"Jane Doe\",\r\n        \"Brad Default\",\r\n        \"Tallulah Testcase\"\r\n    ],\r\n    \"interval\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

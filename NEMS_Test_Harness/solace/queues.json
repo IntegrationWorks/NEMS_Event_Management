@@ -1,0 +1,60 @@
+{
+    "queues": [
+        {
+            "name":                 "TestQueue",
+            "access_type":          "exclusive", 
+            "maxMsgSpoolUsage":     5000,
+            "permission":           "consume", 
+            "ingress_enabled":      true, 
+            "egress_enabled":       true,
+            "subscribed_topics" :
+            [
+                {
+                    "name": "test/topic"
+                }
+            ]
+        },
+        {
+            "name":                 "Birth",
+            "access_type":          "exclusive", 
+            "maxMsgSpoolUsage":     5000,
+            "permission":           "consume", 
+            "ingress_enabled":      true, 
+            "egress_enabled":       true,
+            "subscribed_topics" :
+            [
+                {
+                    "name": "root/nems/birth"
+                }
+            ]
+        },
+        {
+            "name":                 "Death",
+            "access_type":          "exclusive", 
+            "maxMsgSpoolUsage":     5000,
+            "permission":           "consume", 
+            "ingress_enabled":      true, 
+            "egress_enabled":       true,
+            "subscribed_topics" :
+            [
+                {
+                    "name": "root/nems/death"
+                }
+            ]
+        },
+        {
+            "name":                 "Enrollment",
+            "access_type":          "exclusive", 
+            "maxMsgSpoolUsage":     5000,
+            "permission":           "consume", 
+            "ingress_enabled":      true, 
+            "egress_enabled":       true,
+            "subscribed_topics" :
+            [
+                {
+                    "name": "root/nems/enrollment"
+                }
+            ]
+        }
+    ]
+}
