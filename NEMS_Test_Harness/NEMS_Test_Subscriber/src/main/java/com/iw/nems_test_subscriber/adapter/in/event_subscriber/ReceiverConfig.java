@@ -22,14 +22,17 @@ public class ReceiverConfig {
     @Autowired
     private EventListener eventListener;
 
+    @Autowired
+    private Environment env;
+
     // final static Properties SOLACE_PROPERTIES = GlobalProperties.setSolaceProperties("BASIC");
 
-    final static String QUEUE_NAME = GlobalProperties.getEnvProperty("nems.broker.queue");
-    final static String TOKEN_SERVER = GlobalProperties.getEnvProperty("solace.auth.tokenserver");
-    final static String CLIENT_ID = GlobalProperties.getEnvProperty("solace.auth.clientid");
-    final static String CLIENT_SECRET = GlobalProperties.getEnvProperty("solace.auth.clientsecret");
-    final static String SCOPE = GlobalProperties.getEnvProperty("solace.auth.scope");
-    final static String ISSUER = GlobalProperties.getEnvProperty("solace.auth.issuer");
+    // final static String QUEUE_NAME = GlobalProperties.getProperty("nems.broker.queue");
+    final static String TOKEN_SERVER = GlobalProperties.getProperty("solace.auth.tokenserver");
+    final static String CLIENT_ID = GlobalProperties.getProperty("solace.auth.clientid");
+    final static String CLIENT_SECRET = GlobalProperties.getProperty("solace.auth.clientsecret");
+    final static String SCOPE = GlobalProperties.getProperty("solace.auth.scope");
+    final static String ISSUER = GlobalProperties.getProperty("solace.auth.issuer");
 
     final MessagingService messagingService = EventUtil.ConnectBasic();
 
@@ -37,6 +40,13 @@ public class ReceiverConfig {
 
     @Bean
     public PersistentMessageReceiver persistentMessageReceiver() {
+
+        final String QUEUE_NAME = env.getProperty("nems.broker.queue");
+        // final String TOKEN_SERVER = GlobalProperties.getEnvProperty("solace.auth.tokenserver");
+        // final String CLIENT_ID = GlobalProperties.getEnvProperty("solace.auth.clientid");
+        // final String CLIENT_SECRET = GlobalProperties.getEnvProperty("solace.auth.clientsecret");
+        // final String SCOPE = GlobalProperties.getEnvProperty("solace.auth.scope");
+        // final String ISSUER = GlobalProperties.getEnvProperty("solace.auth.issuer");
 
         final MessagingService messagingService = EventUtil.ConnectBasic();
 

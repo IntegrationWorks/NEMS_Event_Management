@@ -6,10 +6,12 @@
 * [NEMS_Test_Harness](#nems-test-harness)
 * [Summary](#summary)
 * [Setup and Pre-requisites](#setup-and-pre-requisites)
-* [Running the Microservice](#running-the-microservice)
-* [Verifying our solution](#verifying-our-solution)
+* [Running the Event Broker](#running-the-event-broker)
+* [Running the Publisher Microservice](#running-the-publisher-microservice)
+* [Running 3 Subscriber Microservices](#running-3-subscriber-microservices)
+* [Verifying our Solution publishing and consuming birth events](#verifying-our-solution-publishing-and-consuming-birth-events)
     * [Using the API with Postman](#using-the-api-with-postman)
-    * [Viewing our sent event](#viewing-our-sent-event)
+    * [Viewing our sent events in event subscriber](#viewing-our-sent-events-in-event-subscriber)
 * [Stopping the container](stopping-the-container)
 
 ## Setup and Pre-requisites
@@ -22,7 +24,24 @@
 
 2. Clone this repository or download the .zip file from GitHub (extract the downloaded zip file )
 
-## Running the Microservices
+## Running the Event Broker
+
+1. Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository
+
+2. Run the following command: 
+
+    ```
+    docker-compose -f docker-compose_solace.yml up --build -d
+    ```
+
+3. 2 containers should now be running: 
+    * `solace`: where a Solace event broker is containerized.
+    * `solace-init`: where a python script runs to set up our `solace` container with all the queues and subscribed topics needed for our microservices to communicate.
+
+4. After a minute or so, the solace broker will be ready for use
+
+
+## Running the Publisher Microservice
 
 1. Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository
 
@@ -47,35 +66,75 @@
 3. Once the build is successful, change back to the cloned repository's directory, then run this command to deploy it as a docker container:
 
     ```
-    docker-compose up -d --build
+    docker-compose -f docker-compose_publisher.yml up --build -d
     ```
 
-4. 3 docker containers should now be running:
-    * `publisher`: where a spring-boot api image, built using a Dockerfile, is containerized. This container is responsible for sending events contaning personal information to the event broker with an exposed API.
+4. a single container should now be running:
+    * `test-publisher`: where a spring-boot api image, built using a Dockerfile, is containerized. This container is responsible for sending events contaning personal information to the event broker with an exposed API.
 
 
 5. The event publisher is now ready for use
 
 
-## Verifying our Solution
+## Running 3 Subscriber Microservices
 
-To verify our solution, we need to send a request to the API exposed by the `publisher-microservice`. Then, we can verify that our request has been published and received as an event by checking the database container with pgAdmin.
+1. Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository
+
+
+2. To build the 3 subscriber application, change directory to `/NEMS_Test_Subscriber`:
+
+    ```
+    cd NEMS_Test_Subscriber
+    ```
+
+    then, run the following command:  
+
+    ```
+    <# Linux/MacOs #>
+    ./mvnw clean package -DskipTests
+
+    <# Windows #>
+    .\mvnw clean package -DskipTests
+    ```
+
+
+3. Once the build is successful, change back to the cloned repository's directory, then run this command to deploy it as a docker container:
+
+    ```
+    docker-compose -f docker-compose_subscribers.yml up --build -d
+    ```
+
+4. 3 container should now be running:
+    * `test-sub-birth-queue`: where a spring-boot api image, built using a Dockerfile, is containerized. This container is responsible for consuming timestamped messages as events and them logging them to the console. This subscriber listens to the `Birth` Queue.
+    * `test-sub-death-queue`: another subscriber container with one key difference: This subscriber listens to the `Death` Queue.
+    * `test-sub-enrollment-queue`: another subscriber container with one key difference: This subscriber listens to the `Enrollment` Queue.
+
+
+5. All 3 subscribers are now ready to receive messages
+
+
+
+## Verifying our Solution publishing and consuming birth events
+
+To verify our solution, we need to send a request to the API exposed by the `publisher-microservice`. Then, we can verify that our request has been published and received as an event by checking the logs of each subscriber that's been deployed.
 
 ### Using the API with Postman
 
 Using Postman:
 
-1. Select `Import` on the `My Workspace` left-hand side window, then import the [Publisher-Hex-Arch.postman_collection.json](https://github.com/mpirotaiswilton-IW/NEMS_Test_Harness/blob/master/NEMS_Test_Publisher/Publisher-Hex-Arch.postman_collection.json)
+1. Select `Import` on the `My Workspace` left-hand side window, then import the [NEMS_Test_Publisher.postman_collection.json](https://github.com/mpirotaiswilton-IW/NEMS_Test_Harness/blob/master/NEMS_Test_Publisher/NEMS_Test_Publisher.postman_collection.json)
 
-2. Select the `Send Person` Post request. In the `Body` tab, there is a json object with 3 fields that looks like this:
+2. Select the `Send Birth Event` Post request. In the `Body` tab, there is a json object with 3 fields that looks like this:
     ```json
     {
-        "topic": "test/topic",
+        "topic": "root/nems/birth",
         "payloadStrings": [
-            "payload1",
-            "Payload2"
+            "John Doe",
+            "Jane Doe",
+            "Brad Default",
+            "Tallulah Testcase"
         ],
-        "interval": 10
+        "interval": 3
     }
     ``` 
 
@@ -83,27 +142,49 @@ Using Postman:
 
 3. Send the request. You should receive a 200 OK response and a response body echoing your request body's parameters: 
     ```
-    new Message:[payload1, Payload2] | to send to topic: test/topic | with interval: 10.0
+    new Message(s) received:[John Doe, Jane Doe, Brad Default, Tallulah Testcase]
+    to send to topic: 
+    root/nems/birth
+    with interval: 
+    3.0
+    they are being sent on an asynchronous thread and will be accessible shortly.
     ``` 
 
-### Viewing our sent event in Solace event broker
+### Viewing our sent events in event subscriber
 
-Once the publisher received the event successfully, the events will be processed sequentially based on the interval specified in the request. To view these messages in the event queue, go to <localhost:8081>: you will be greeted with a login page for the solace broker.
+Once the publisher received the event successfully, the events will be processed sequentially based on the interval specified in the request body. After being sent to the broker, then the subscriber for the relevant queue will consume this message and log its content and timestamp. In the example above, we sent 4 messages to the topic `root/nems/birth`, which will be sent to the `Birth` Queue where message will be consumed by the microservice `test-sub-birth-queue`
 
-1. Use the credentials 
+1. Display the logs of the microservice with the following command:
+
     ```
-    username:admin
-    password:admin
+    docker container logs test-sub-birth-queue
     ```
 
-2. Select the default Message VPN
-3. Select Queues, then `TestQueue`
-4. Select the Messages Queued tab, you should see the same amount of messages that you sent using Postman
+2. Observe the logs of the container, the final 8 lines should display the following (Note: the timestamps will be different from the ones below):
+    ```
+    A message was received @ 2024-07-08 00:20:57:484
+    Content: John Doe
+    A message was received @ 2024-07-08 00:21:00:507
+    Content: Jane Doe
+    A message was received @ 2024-07-08 00:21:03:539
+    Content: Brad Default
+    A message was received @ 2024-07-08 00:21:06:546
+    Content: Tallulah Testcase
+    ```
+
+3. You may repeat the instructions above using the `Send Death Event` and using the `docker container logs test-sub-death-queue` command, as well as the `Send Enrollment Event` and using the `docker container logs test-sub-enrollment-queue` command to verify the death and enrollment queues and associated subscriber microservices.
 
 
 ## Stopping the container
 
-To stop the docker container, run the following command: 
+To stop the docker containers, run the following commands: 
 ```
-docker-compose down
+<# Stop Solace Broker #>
+docker-compose -f docker-compose_solace.yml down
+
+<# Stop Publisher Microservice #>
+docker-compose -f docker-compose_publisher.yml down
+
+<# Stop Subscribers Microservice #>
+docker-compose -f docker-compose_subscribers.yml down
 ```

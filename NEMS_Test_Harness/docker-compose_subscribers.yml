@@ -2,21 +2,21 @@ version: '3.9'
 
 services:
   subscriber0:
-    container_name: test_subscriber_birth_queue
+    container_name: test-sub-birth-queue
     build:
       context: ./NEMS_Test_Subscriber/
       dockerfile: Dockerfile
     environment:
       - nems.broker.queue=Birth
   subscriber1:
-    container_name: test_subscriber_death_queue
+    container_name: test-sub-death-queue
     build:
       context: ./NEMS_Test_Subscriber/
       dockerfile: Dockerfile
     environment:
       - nems.broker.queue=Death
   subscriber2:
-    container_name: test_subscriber_enrollment_queue
+    container_name: test-sub-enrollment-queue
     build:
       context: ./NEMS_Test_Subscriber/
       dockerfile: Dockerfile

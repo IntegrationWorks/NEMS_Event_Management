@@ -4,15 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-
 import com.solace.messaging.config.SolaceProperties;
 
 public class GlobalProperties {
 
-    @Autowired
-    private static Environment env;
     private static Properties properties = new Properties();
     public static String propertyFile = "application.properties";
 
@@ -29,10 +24,6 @@ public class GlobalProperties {
 
     public static String getProperty(String key) {
         return properties.getProperty(key);
-    }
-
-    public static String getEnvProperty(String key) {
-        return env.getProperty(key);
     }
 
     public static Properties loadProperties() throws IOException {
