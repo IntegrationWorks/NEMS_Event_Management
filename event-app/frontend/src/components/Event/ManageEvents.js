@@ -72,7 +72,7 @@ function ManageEvents() {
     const selectedEventObjects = events.filter(event => selectedEvents.includes(event.id));
 
     // Collect payload strings for all selected events
-    const payloadStrings = selectedEventObjects.flatMap(event => [
+    const payload = selectedEventObjects.flatMap(event => [
       event.name,
       event.description,
       event.taxonomy,
@@ -81,7 +81,7 @@ function ManageEvents() {
 
     const message = {
       topic: selectedEventObjects[0]?.taxonomy || 'default/topic',
-      payloadStrings: payloadStrings,
+      payload: payload,
       interval: 3,
     };
 

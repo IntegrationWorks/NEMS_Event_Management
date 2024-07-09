@@ -130,7 +130,7 @@ services:
       context: ../NEMS_Test_Harness/NEMS_Test_Subscriber/
       dockerfile: Dockerfile
     environment:
-      - nems.broker.queue=Birth
+      nems.broker.queue: Birth
     networks:
       - common-network
     depends_on:
@@ -143,7 +143,7 @@ services:
       context: ../NEMS_Test_Harness/NEMS_Test_Subscriber/
       dockerfile: Dockerfile
     environment:
-      - nems.broker.queue=Death
+      nems.broker.queue: Death
     networks:
       - common-network
     depends_on:
@@ -156,7 +156,7 @@ services:
       context: ../NEMS_Test_Harness/NEMS_Test_Subscriber/
       dockerfile: Dockerfile
     environment:
-      - nems.broker.queue=Enrollment
+      nems.broker.queue: Enrollment
     networks:
       - common-network
     depends_on:

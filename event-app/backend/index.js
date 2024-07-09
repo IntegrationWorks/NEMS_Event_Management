@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
 require('dotenv').config();
-const solace = require('solclientjs'); // Correct package import
+const solace = require('solclientjs').debug; // Ensure solace package is imported
 
 const app = express();
 app.use(cors());
@@ -41,6 +41,10 @@ function createSolaceSession() {
 
     solaceSession.on(solace.SessionEventCode.CONNECT_FAILED_ERROR, (sessionEvent) => {
       console.error('Solace connection failed: ', sessionEvent.infoStr);
+    });
+
+    solaceSession.on(solace.SessionEventCode.DISCONNECTED, () => {
+      console.log('Solace session disconnected.');
     });
 
     solaceSession.connect();
@@ -116,16 +120,16 @@ app.put('/events/:id', async (req, res) => {
 
 // Endpoint to send message to Solace
 app.post('/send-message', async (req, res) => {
-  const { topic, payloadStrings, interval } = req.body;
+  const { topic, payload, interval } = req.body;
 
-  if (!Array.isArray(payloadStrings)) {
-    console.log('Invalid payloadStrings format:', payloadStrings);
-    return res.status(400).json({ error: 'payloadStrings must be an array of strings' });
+  if (!Array.isArray(payload)) {
+    console.log('Invalid payload format:', payload);
+    return res.status(400).json({ error: 'payload must be an array of strings' });
   }
 
   const message = {
     topic,
-    payloadStrings,
+    payload,
     interval: interval !== null ? interval : 0 // Default to 0 if interval is null
   };
 
