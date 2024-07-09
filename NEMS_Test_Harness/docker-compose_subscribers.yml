@@ -8,6 +8,9 @@ services:
       dockerfile: Dockerfile
     environment:
       - nems.broker.queue=Birth
+    networks:
+      - common-network
+
   subscriber1:
     container_name: test-sub-death-queue
     build:
@@ -15,6 +18,9 @@ services:
       dockerfile: Dockerfile
     environment:
       - nems.broker.queue=Death
+    networks:
+      - common-network
+
   subscriber2:
     container_name: test-sub-enrollment-queue
     build:
@@ -22,3 +28,9 @@ services:
       dockerfile: Dockerfile
     environment:
       - nems.broker.queue=Enrollment
+    networks:
+      - common-network
+
+networks:
+  common-network:
+    driver: bridge

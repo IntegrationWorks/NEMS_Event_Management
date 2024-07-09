@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
-const axios = require('axios');
 require('dotenv').config();
+const solace = require('solclientjs'); // Correct package import
 
 const app = express();
 app.use(cors());
@@ -16,6 +16,42 @@ const pool = new Pool({
   port: process.env.DB_PORT,
 });
 
+// Log the solace object to understand its structure
+console.log('Solace object:', solace);
+
+// Initialize Solace session
+let solaceSession;
+
+function createSolaceSession() {
+  try {
+    solace.SolclientFactory.init({
+      profile: solace.SolclientFactoryProfiles.version10
+    });
+
+    solaceSession = solace.SolclientFactory.createSession({
+      url: process.env.SOLACE_HOST_URL,
+      vpnName: process.env.SOLACE_VPN_NAME,
+      userName: process.env.SOLACE_USERNAME,
+      password: process.env.SOLACE_PASSWORD,
+    });
+
+    solaceSession.on(solace.SessionEventCode.UP_NOTICE, () => {
+      console.log('Solace session is up.');
+    });
+
+    solaceSession.on(solace.SessionEventCode.CONNECT_FAILED_ERROR, (sessionEvent) => {
+      console.error('Solace connection failed: ', sessionEvent.infoStr);
+    });
+
+    solaceSession.connect();
+  } catch (error) {
+    console.error('Error creating Solace session:', error);
+  }
+}
+
+// Create Solace session
+createSolaceSession();
+
 // Endpoint to fetch all events
 app.get('/events', async (req, res) => {
   try {
@@ -26,6 +62,7 @@ app.get('/events', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
 // Endpoint to create a new event
 app.post('/events', async (req, res) => {
   const { name, description, taxonomy, version } = req.body;
@@ -76,6 +113,8 @@ app.put('/events/:id', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+// Endpoint to send message to Solace
 app.post('/send-message', async (req, res) => {
   const { topic, payloadStrings, interval } = req.body;
 
@@ -92,26 +131,16 @@ app.post('/send-message', async (req, res) => {
 
   try {
     console.log('Payload to Solace:', JSON.stringify(message, null, 2)); // Log the payload
-    const response = await axios.post('127.0.0.1:8080/', message, {
-      headers: { 'Content-Type': 'application/json' },
-    });
-    console.log('Response from Solace:', response.status, response.data); // Log the response
-    res.status(response.status).json(response.data);
+    const solaceMessage = solace.SolclientFactory.createMessage();
+    solaceMessage.setDestination(solace.SolclientFactory.createTopicDestination(topic));
+    solaceMessage.setBinaryAttachment(JSON.stringify(message));
+    solaceSession.send(solaceMessage);
+    res.status(200).json({ status: 'Message sent to Solace' });
   } catch (err) {
     console.error('Error sending message inside the backend:', err.message);
-    if (err.response) {
-      // Log detailed error information from the response
-      console.error('Response data:', err.response.data);
-      console.error('Response status:', err.response.status);
-      console.error('Response headers:', err.response.headers);
-      res.status(err.response.status).json({ error: err.response.data });
-    } else {
-      console.error('No response received:', err.message);
-      res.status(500).json({ error: 'Failed to send message inside the backend' });
-    }
+    res.status(500).json({ error: 'Failed to send message inside the backend' });
   }
 });
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

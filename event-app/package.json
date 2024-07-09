@@ -1,5 +1,9 @@
 {
   "devDependencies": {
-    "@types/dotenv": "^8.2.0"
+    "@types/dotenv": "^8.2.0",
+    "nodemon": "^3.1.4"
+  },
+  "dependencies": {
+    "solace": "^1.2.0"
   }
 }

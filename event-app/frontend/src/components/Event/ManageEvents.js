@@ -26,7 +26,6 @@ function ManageEvents() {
       })
       .catch(error => console.error('Error fetching events:', error));
   };
-  
 
   const handleNewEvent = () => {
     setShowCreateModal(true);
@@ -81,9 +80,9 @@ function ManageEvents() {
     ]);
 
     const message = {
-      topic: selectedEventObjects[0]?.taxonomy || 'default/topic', 
+      topic: selectedEventObjects[0]?.taxonomy || 'default/topic',
       payloadStrings: payloadStrings,
-      interval: 3, 
+      interval: 3,
     };
 
     try {
@@ -111,10 +110,10 @@ function ManageEvents() {
         <thead>
           <tr>
             <th>
-              <Form.Check 
-                type="checkbox" 
-                checked={selectAll} 
-                onChange={handleSelectAll} 
+              <Form.Check
+                type="checkbox"
+                checked={selectAll}
+                onChange={handleSelectAll}
               />
             </th>
             <th>Name</th>
@@ -128,10 +127,10 @@ function ManageEvents() {
           {events.map(event => (
             <tr key={event.id}>
               <td>
-                <Form.Check 
-                  type="checkbox" 
-                  checked={selectedEvents.includes(event.id)} 
-                  onChange={() => handleSelectEvent(event.id)} 
+                <Form.Check
+                  type="checkbox"
+                  checked={selectedEvents.includes(event.id)}
+                  onChange={() => handleSelectEvent(event.id)}
                 />
               </td>
               <td>{event.name}</td>
