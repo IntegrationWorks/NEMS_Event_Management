@@ -42,7 +42,7 @@ cd NEMS_Test_Subscriber
 .\mvnw clean package -DskipTests  # Windows
 ```
 
-### Running the React Event App
+### Running the React Event App and Solace containers
 Using a Command Line Interface of your choosing, change directory to the event-app directory.
 
 Run the following command to build and start the React app and the Solace related containers
@@ -51,5 +51,5 @@ cd event-app
 docker-compose --build -d
 ```
 
-This setup will get both the NEMS Test Harness and the React Event App running, with integrations with the Solace broker, PostgreSQL database, and pgAdmin.
+This setup will get both the NEMS Test Harness and the React Event App running, with integrations with the Solace broker, PostgreSQL database, and pgAdmin and solace containers.
 
