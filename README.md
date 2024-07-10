@@ -19,40 +19,33 @@ Install Postman on your device
 
 Clone this repository or download the .zip file from GitHub and extract the downloaded zip file.
 
-### Running the Event Broker
-Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository, then to the NEMS_Test_Harness directory.
-
- ```
-docker-compose -f docker-compose_solace.yml up --build -d
- ```
 
  Running the Publisher Microservice
 Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository, then to the NEMS_Test_Harness directory.
 
-### To build the publisher application, change directory to /NEMS_Test_Publisher:
+### To build the publisher application, change directory to NEMS_Test_Harness/NEMS_Test_Publisher:
+
 ```
 cd NEMS_Test_Publisher
 ./mvnw clean package -DskipTests  # Linux/MacOs
 .\mvnw clean package -DskipTests  # Windows
-docker-compose -f docker-compose_publisher.yml up --build -d
  ```
  
-### Running 3 Subscriber Microservices
+### To build the 3 Subscriber Microservices
 Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository, then to the NEMS_Test_Harness directory.
 
-To build the 3 subscriber applications, change directory to /NEMS_Test_Subscriber:
+To build the 3 subscriber applications, change directory to NEMS_Test_Harness/NEMS_Test_Subscriber:
 
 ```
 cd NEMS_Test_Subscriber
 ./mvnw clean package -DskipTests  # Linux/MacOs
 .\mvnw clean package -DskipTests  # Windows
-docker-compose -f docker-compose_subscribers.yml up --build -d
 ```
 
 ### Running the React Event App
 Using a Command Line Interface of your choosing, change directory to the event-app directory.
 
-Run the following command to build and start the React app:
+Run the following command to build and start the React app and the Solace related containers
 ```
 cd event-app
 docker-compose --build -d
