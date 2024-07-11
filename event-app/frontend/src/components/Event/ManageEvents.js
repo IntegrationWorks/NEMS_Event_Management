@@ -14,12 +14,16 @@ function ManageEvents() {
   const [loading, setLoading] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
 
+  const backendUrl = process.env.NODE_ENV === 'development' 
+    ? 'http://localhost:5001' 
+    : process.env.REACT_APP_BACKEND_URL;
+
   useEffect(() => {
     fetchEvents();
   }, []);
 
   const fetchEvents = () => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/events`)
+    fetch(`${backendUrl}/events`)
       .then(response => response.json())
       .then(data => {
         setEvents(data);
@@ -87,7 +91,7 @@ function ManageEvents() {
 
     try {
       console.log('Sending message:', message); // Add this line to debug
-      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/send-message`, message, {
+      await axios.post(`${backendUrl}/send-message`, message, {
         headers: { 'Content-Type': 'application/json' },
       });
       alert('Selected events published successfully!');

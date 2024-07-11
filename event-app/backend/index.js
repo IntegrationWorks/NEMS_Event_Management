@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
 require('dotenv').config();
-const solace = require('solclientjs').debug; // Ensure solace package is imported
+const axios = require('axios');
 
 const app = express();
 app.use(cors());
@@ -15,46 +15,6 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
 });
-
-// Log the solace object to understand its structure
-console.log('Solace object:', solace);
-
-// Initialize Solace session
-let solaceSession;
-
-function createSolaceSession() {
-  try {
-    solace.SolclientFactory.init({
-      profile: solace.SolclientFactoryProfiles.version10
-    });
-
-    solaceSession = solace.SolclientFactory.createSession({
-      url: process.env.SOLACE_HOST_URL,
-      vpnName: process.env.SOLACE_VPN_NAME,
-      userName: process.env.SOLACE_USERNAME,
-      password: process.env.SOLACE_PASSWORD,
-    });
-
-    solaceSession.on(solace.SessionEventCode.UP_NOTICE, () => {
-      console.log('Solace session is up.');
-    });
-
-    solaceSession.on(solace.SessionEventCode.CONNECT_FAILED_ERROR, (sessionEvent) => {
-      console.error('Solace connection failed: ', sessionEvent.infoStr);
-    });
-
-    solaceSession.on(solace.SessionEventCode.DISCONNECTED, () => {
-      console.log('Solace session disconnected.');
-    });
-
-    solaceSession.connect();
-  } catch (error) {
-    console.error('Error creating Solace session:', error);
-  }
-}
-
-// Create Solace session
-createSolaceSession();
 
 // Endpoint to fetch all events
 app.get('/events', async (req, res) => {
@@ -118,7 +78,7 @@ app.put('/events/:id', async (req, res) => {
   }
 });
 
-// Endpoint to send message to Solace
+// Endpoint to send message to Test Publisher
 app.post('/send-message', async (req, res) => {
   const { topic, payload, interval } = req.body;
 
@@ -134,15 +94,14 @@ app.post('/send-message', async (req, res) => {
   };
 
   try {
-    console.log('Payload to Solace:', JSON.stringify(message, null, 2)); // Log the payload
-    const solaceMessage = solace.SolclientFactory.createMessage();
-    solaceMessage.setDestination(solace.SolclientFactory.createTopicDestination(topic));
-    solaceMessage.setBinaryAttachment(JSON.stringify(message));
-    solaceSession.send(solaceMessage);
-    res.status(200).json({ status: 'Message sent to Solace' });
+    console.log('Payload to Test Publisher:', JSON.stringify(message, null, 2)); // Log the payload
+    await axios.post(`${process.env.REACT_APP_TEST_PUBLISHER_URL}`, message, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+    res.status(200).json({ status: 'Message sent to Test Publisher' });
   } catch (err) {
-    console.error('Error sending message inside the backend:', err.message);
-    res.status(500).json({ error: 'Failed to send message inside the backend' });
+    console.error('Error sending message to Test Publisher:', err.message);
+    res.status(500).json({ error: 'Failed to send message to Test Publisher' });
   }
 });
 

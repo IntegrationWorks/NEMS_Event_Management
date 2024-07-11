@@ -25,7 +25,6 @@ Using a Command Line Interface of your choosing, change directory to the event-a
 
 Run the following command to build and start the React app:
 ```
-docker network create common-network 
 cd event-app
 docker-compose --build -d
 ```

@@ -4,6 +4,7 @@
     "nodemon": "^3.1.4"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "solace": "^1.2.0"
   }
 }

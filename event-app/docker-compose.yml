@@ -8,7 +8,7 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - common-network
+      - nems_test_harness_common-network
     env_file:
       - .env
 
@@ -19,7 +19,7 @@ services:
     ports:
       - "5001:5000"
     networks:
-      - common-network
+      - nems_test_harness_common-network
     env_file:
       - .env
     depends_on:
@@ -38,7 +38,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - common-network
+      - nems_test_harness_common-network
 
   pgadmin:
     image: dpage/pgadmin4
@@ -51,10 +51,10 @@ services:
     depends_on:
       - postgres-db
     networks:
-      - common-network
+      - nems_test_harness_common-network
 
 networks:
-  common-network:
+  nems_test_harness_common-network:
     external: true
 
 volumes:
