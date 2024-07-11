@@ -15,7 +15,7 @@ public class PlaceholderPort implements GetMessagePort {
         // TODO Auto-generated method stub
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
         System.out.println("A message was received @ " + df.format(timeStampedMessage.getTimeStamp()));
-        System.out.println("Payload: " + timeStampedMessage.getPayload().toString());
+        System.out.println("Content: " + timeStampedMessage.getContent());
         return timeStampedMessage;
     }
 

@@ -14,24 +14,18 @@ import lombok.Setter;
 @Setter
 public class TimeStampedMessage implements Serializable {
 
-    private String topic;
-    private JsonNode payload;
-    private int interval;
+    private JsonNode content;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss:SSS")
     private Date timeStamp;
 
-    public TimeStampedMessage(String topic, JsonNode payload, int interval, Date timeStamp) {
-        this.topic = topic;
-        this.payload = payload;
-        this.interval = interval;
-        this.timeStamp = timeStamp;
+    public TimeStampedMessage(JsonNode message) {
+        this.content = message;
+        this.timeStamp = new Date();
     }
 
     public TimeStampedMessage() {
-        this.topic = "";
-        this.payload = JsonNodeFactory.instance.objectNode();
-        this.interval = 0;
+        this.content = JsonNodeFactory.instance.objectNode();
         this.timeStamp = new Date();
     }
 }
