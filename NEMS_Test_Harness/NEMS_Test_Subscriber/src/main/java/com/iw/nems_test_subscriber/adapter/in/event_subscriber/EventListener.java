@@ -27,7 +27,7 @@ public class EventListener {
         // String jsonString = objectString.replace("TimeStampedMessage{ \"","{\"");
 
         ObjectMapper mapper = new ObjectMapper();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss:SSS");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
         mapper.setDateFormat(df);
 
         try {
