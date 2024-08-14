@@ -2,7 +2,6 @@ package com.iw.nems_test_subscriber_top.adapter.in.database;
 
 import java.util.List;
 
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 
 
@@ -21,7 +20,7 @@ public class DatabaseEventHandlerImpl implements DatabaseEventHandler {
 
     @Override
     public void onTriggerPull() {
-        System.out.println("Database pull has been triggered, processing...");
+        // System.out.println("Database pull has been triggered, processing...");
         pullDatabase();
     }
 
