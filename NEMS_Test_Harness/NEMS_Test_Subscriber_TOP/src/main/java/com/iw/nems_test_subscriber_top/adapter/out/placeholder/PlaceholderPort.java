@@ -18,8 +18,11 @@ public class PlaceholderPort implements GetMessagePort {
         String messageNhi = timeStampedMessage.getContent().get("nhi").asText();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
         
+        System.out.println(" ----- ");
+
         System.out.println("A message was received @ " + df.format(timeStampedMessage.getTimeStamp()));
         System.out.println("Content: " + timeStampedMessage.getContent());
+        System.out.println("");
 
         if(MockNHIParser.isValid(messageNhi)){
             System.out.println("The NHI number has been validated and the message will be passed on (Mock) and deleted from outbox repository");
