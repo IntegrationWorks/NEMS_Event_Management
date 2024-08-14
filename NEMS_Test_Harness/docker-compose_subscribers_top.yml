@@ -1,0 +1,87 @@
+version: '3.9'
+
+services:
+  subscriber0:
+    container_name: test-sub-birth-queue
+    build:
+      context: ./NEMS_Test_Subscriber_TOP/
+      dockerfile: Dockerfile
+    environment:
+      - nems.broker.queue=Birth
+      - spring.datasource.url=jdbc:postgresql://db-birth-q-sub:5432/admin
+      - subscriber.app.id=100
+    networks:
+      - common-network
+    depends_on:
+      - db0
+
+  db0:
+    image: postgres:13.1-alpine
+    restart: always
+    container_name: db-birth-q-sub
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: pass
+    volumes:
+      - db0:/var/lib/postgresql/data
+    networks:
+      - common-network
+
+  # subscriber1:
+  #   container_name: test-sub-death-queue
+  #   build:
+  #     context: ./NEMS_Test_Subscriber_TOP/
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - nems.broker.queue=Death
+  #     - spring.datasource.url=jdbc:postgresql://db-death-q-sub:5432/admin
+  #     - subscriber.app.id=200
+  #   networks:
+  #     - common-network
+  #   depends_on:
+  #     - db1
+
+  # db1:
+  #   image: postgres:13.1-alpine
+  #   restart: always
+  #   container_name: db-death-q-sub
+  #   environment:
+  #     POSTGRES_USER: admin
+  #     POSTGRES_PASSWORD: pass
+  #   volumes:
+  #     - db1:/var/lib/postgresql/data
+  #   networks:
+  #     - common-network
+
+  # subscriber2:
+  #   container_name: test-sub-enrollment-queue
+  #   build:
+  #     context: ./NEMS_Test_Subscriber/
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - nems.broker.queue=Enrollment
+  #   networks:
+  #     - common-network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    networks:
+      - common-network
+    depends_on:
+      - db0
+
+volumes:
+  db0:
+  db1:
+  db2:
+
+networks:
+  common-network:
+    driver: bridge
