@@ -25,7 +25,7 @@ public class PlaceholderPort implements GetMessagePort {
             System.out.println("The NHI number has been validated and the message will be passed on (Mock) and deleted from outbox repository");
             return timeStampedMessage;
         } else {
-            System.out.println("The NHI number has been deemed invalid. This can be because it is either formatted incorrectly or is not pressent");
+            System.out.println("The NHI number has been deemed invalid. This can be because it is either formatted incorrectly or is not present");
             System.out.println("The message will now be deemed as failed");
             return null;
         }
