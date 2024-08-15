@@ -9,4 +9,5 @@ import com.iw.nems_test_subscriber_top.application.domain.model.TimeStampedMessa
 public interface SendMessageUseCase {
     void processNewOutboxMessages(List<OutboxMessage> obMessages);
     boolean sendEventPayload(TimeStampedMessage timeStampedMessage);
+    void processMessage(OutboxMessage obMessage);
 }

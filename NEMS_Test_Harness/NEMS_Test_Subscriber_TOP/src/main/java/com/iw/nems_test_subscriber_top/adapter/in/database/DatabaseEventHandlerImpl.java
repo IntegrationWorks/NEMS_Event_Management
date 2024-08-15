@@ -1,7 +1,5 @@
 package com.iw.nems_test_subscriber_top.adapter.in.database;
 
-import java.util.List;
-
 import org.springframework.stereotype.Controller;
 
 
@@ -19,15 +17,24 @@ public class DatabaseEventHandlerImpl implements DatabaseEventHandler {
     final private OutboxRepository outboxRepository;
 
     @Override
-    public void onTriggerPull() {
+    public void onTriggerPull(long id) {
         // System.out.println("Database pull has been triggered, processing...");
-        pullDatabase();
+        pullDatabase(id);
     }
 
     @Override
-    public void pullDatabase() {
-        List<OutboxMessage> obMessages = outboxRepository.findByStatus("new");
-        sendMessageUseCase.processNewOutboxMessages(obMessages);
+    public void pullDatabase(long id) {
+
+        OutboxMessage obMessage = outboxRepository.findById(id).get();
+
+        String messageStatus = obMessage.getStatus();
+
+        if(messageStatus.equalsIgnoreCase("new")){
+            sendMessageUseCase.processMessage(obMessage);
+        } else {
+            System.err.println("Message status != new");
+        }
+
     }
 
 }

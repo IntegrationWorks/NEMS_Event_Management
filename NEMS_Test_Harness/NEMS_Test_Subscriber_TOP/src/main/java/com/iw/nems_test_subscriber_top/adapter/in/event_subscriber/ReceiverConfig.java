@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
+import com.iw.nems_test_subscriber_top.adapter.in.database.DatabaseEventHandler;
 import com.iw.nems_test_subscriber_top.adapter.in.event_subscriber.util.EventUtil;
 import com.solace.messaging.MessagingService;
 import com.solace.messaging.receiver.PersistentMessageReceiver;
@@ -21,6 +22,9 @@ public class ReceiverConfig {
 
     @Autowired
     private EventListener eventListener;
+
+    @Autowired
+    private DatabaseEventHandler dbEventHandler;
 
     @Autowired
     private Environment env;
@@ -75,12 +79,17 @@ public class ReceiverConfig {
         receiver.receiveAsync(message -> {
 
             // Where customer code can be rimplemeted to handle events before they are ACKed
-            eventListener.processEvent(message);
+            long obMessageId = eventListener.processEvent(message);
             // Messages are removed from the broker queue when the ACK is received.
             // Therefore, DO NOT ACK until all processing/storing of this message is
             // complete.
             // NOTE that messages can be acknowledged from any thread.
-            receiver.ack(message); // ACKs are asynchronous
+            if(obMessageId >= 0){
+                receiver.ack(message); // ACKs are asynchronous
+                dbEventHandler.onTriggerPull(obMessageId);
+            } else { // THIS PIECE OF CODE SHOULD NOT HAPPEN
+                System.err.println("CRITICAL ERROR ----- Something has gone wrong while attempting to save the message to the Outbox database table");
+            }
 
         });
 

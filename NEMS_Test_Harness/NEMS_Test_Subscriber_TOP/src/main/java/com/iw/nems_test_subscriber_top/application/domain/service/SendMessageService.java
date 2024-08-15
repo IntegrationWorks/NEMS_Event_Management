@@ -21,18 +21,24 @@ public class SendMessageService implements SendMessageUseCase{
     @Override
     public void processNewOutboxMessages(List<OutboxMessage> obMessages) {
         for (OutboxMessage outboxMessage : obMessages) {
-            boolean sentSuccessfully= sendEventPayload(outboxMessage.getMessage());
-            if(sentSuccessfully){
-                dbPort.deleteMessage(outboxMessage.getSequenceNum());
-            } else {
-                dbPort.failMessage(outboxMessage.getSequenceNum());
-            }
+            processMessage(outboxMessage);
         }
     }
 
     @Override
     public boolean sendEventPayload(TimeStampedMessage timeStampedMessage) {
         return ( getEventPort.getEventPayload(timeStampedMessage) != null);
+    }
+
+    @Override
+    public void processMessage(OutboxMessage obMessage) {
+        boolean sentSuccessfully= sendEventPayload(obMessage.getMessage());
+        if(sentSuccessfully){
+            dbPort.deleteMessage(obMessage.getSequenceNum());
+        } else {
+            dbPort.failMessage(obMessage.getSequenceNum());
+        }
+        return;
     }
 
 }
