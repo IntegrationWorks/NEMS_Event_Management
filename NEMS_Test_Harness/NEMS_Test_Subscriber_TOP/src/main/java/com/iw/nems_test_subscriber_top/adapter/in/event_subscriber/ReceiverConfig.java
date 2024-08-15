@@ -29,9 +29,6 @@ public class ReceiverConfig {
     @Autowired
     private Environment env;
 
-    // final static Properties SOLACE_PROPERTIES = GlobalProperties.setSolaceProperties("BASIC");
-
-    // final static String QUEUE_NAME = GlobalProperties.getProperty("nems.broker.queue");
     final static String TOKEN_SERVER = GlobalProperties.getProperty("solace.auth.tokenserver");
     final static String CLIENT_ID = GlobalProperties.getProperty("solace.auth.clientid");
     final static String CLIENT_SECRET = GlobalProperties.getProperty("solace.auth.clientsecret");
@@ -46,11 +43,6 @@ public class ReceiverConfig {
     public PersistentMessageReceiver persistentMessageReceiver() {
 
         final String QUEUE_NAME = env.getProperty("nems.broker.queue");
-        // final String TOKEN_SERVER = GlobalProperties.getEnvProperty("solace.auth.tokenserver");
-        // final String CLIENT_ID = GlobalProperties.getEnvProperty("solace.auth.clientid");
-        // final String CLIENT_SECRET = GlobalProperties.getEnvProperty("solace.auth.clientsecret");
-        // final String SCOPE = GlobalProperties.getEnvProperty("solace.auth.scope");
-        // final String ISSUER = GlobalProperties.getEnvProperty("solace.auth.issuer");
 
         final MessagingService messagingService = EventUtil.ConnectBasic();
 
@@ -80,11 +72,14 @@ public class ReceiverConfig {
 
             // Where customer code can be rimplemeted to handle events before they are ACKed
             long obMessageId = eventListener.processEvent(message);
-            // Messages are removed from the broker queue when the ACK is received.
-            // Therefore, DO NOT ACK until all processing/storing of this message is
-            // complete.
-            // NOTE that messages can be acknowledged from any thread.
+
+            // obMessageId will be -1 if the message is not written to outbox DB table
+            // otherwise it will be == new DB entry sequenceNum
             if(obMessageId >= 0){
+                // Messages are removed from the broker queue when the ACK is received.
+                // Therefore, DO NOT ACK until all processing/storing of this message is
+                // complete.
+                // NOTE that messages can be acknowledged from any thread.
                 receiver.ack(message); // ACKs are asynchronous
                 dbEventHandler.onTriggerPull(obMessageId);
             } else { // THIS PIECE OF CODE SHOULD NOT HAPPEN
