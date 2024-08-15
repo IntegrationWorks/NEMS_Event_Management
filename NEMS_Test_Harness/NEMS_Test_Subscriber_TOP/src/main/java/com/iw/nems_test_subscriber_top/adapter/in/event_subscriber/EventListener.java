@@ -23,7 +23,9 @@ public class EventListener {
     private final OutboxManagementUseCase outboxManagementUseCase;
     PersistentMessageReceiver receiver;
 
-    public void processEvent(InboundMessage message){
+    public long processEvent(InboundMessage message){
+
+        long newMessageId = -1;
 
         String jsonString = message.getPayloadAsString();
 
@@ -36,14 +38,14 @@ public class EventListener {
         try {
             TimeStampedMessage tsMessage = mapper.readerFor(TimeStampedMessage.class).readValue(jsonString);
             if(replicationGroupMessageId != null){
-                outboxManagementUseCase.consumeMessage(tsMessage, replicationGroupMessageId);
+                newMessageId = outboxManagementUseCase.writeMessageToDb(tsMessage, replicationGroupMessageId);
             }
 
         } catch (IOException e) {
             System.err.println("New message could not be parsed back into a TimeStampedMessage object: " + e.toString());
-        }
+        } 
 
-        // System.out.println(jsonString);
+        return newMessageId;
     }
 
 }
