@@ -28,18 +28,24 @@ public class OutboxMessage {
     
     private String nhi;
     private TimeStampedMessage message;
-    private String status;
+    private String status = "new";
 
     public OutboxMessage(TimeStampedMessage tsMessage){
-        this.nhi = tsMessage.getContent().get("nhi").asText();
+        try{
+            this.nhi = tsMessage.getContent().get("nhi").asText();
+        } catch (NullPointerException e) {
+            this.nhi = "";
+        }
         this.message = tsMessage;
-        this.status = "new";
     }
 
     public OutboxMessage(TimeStampedMessage tsMessage, String messageId){
-        this.nhi = tsMessage.getContent().get("nhi").asText();
+        try{
+            this.nhi = tsMessage.getContent().get("nhi").asText();
+        } catch (NullPointerException e) {
+            this.nhi = "";
+        }
         this.message = tsMessage;
-        this.status = "new";
         this.messageId = messageId;
     }
 
