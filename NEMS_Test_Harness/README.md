@@ -8,10 +8,13 @@
 * [Setup and Pre-requisites](#setup-and-pre-requisites)
 * [Running the Event Broker](#running-the-event-broker)
 * [Running the Publisher Microservice](#running-the-publisher-microservice)
-* [Running 3 Subscriber Microservices](#running-3-subscriber-microservices)
+* [Deploying 3 Subscriber Microservices](#deploying-3-subscriber-microservices)
+    * [Default Subscribers](#default-subscribers)
+    * [Transactional Outbox Pattern Subscriber](#transactional-outbox-pattern-subscribers)
 * [Verifying our Solution publishing and consuming birth events](#verifying-our-solution-publishing-and-consuming-birth-events)
     * [Using the API with Postman](#using-the-api-with-postman)
     * [Viewing our sent events in event subscriber](#viewing-our-sent-events-in-event-subscriber)
+    * [Checking the Postgres Database(s) using pgAdmin](#checking-the-postgres-databases-using-pgadmin)
 * [Stopping the container](stopping-the-container)
 
 ## Setup and Pre-requisites
@@ -75,8 +78,9 @@
 
 5. The event publisher is now ready for use
 
+## Deploying 3 Subscriber Microservices
 
-## Running 3 Subscriber Microservices
+### Default Subscribers
 
 1. Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository, then to the `NEMS_Test_Harness` directory
 
@@ -104,7 +108,7 @@
     docker-compose -f docker-compose_subscribers.yml up --build -d
     ```
 
-4. 3 container should now be running:
+4. 3 containers should now be running:
     * `test-sub-birth-queue`: where a spring-boot api image, built using a Dockerfile, is containerized. This container is responsible for consuming timestamped messages as events and them logging them to the console. This subscriber listens to the `Birth` Queue.
     * `test-sub-death-queue`: another subscriber container with one key difference: This subscriber listens to the `Death` Queue.
     * `test-sub-enrollment-queue`: another subscriber container with one key difference: This subscriber listens to the `Enrollment` Queue.
@@ -112,6 +116,45 @@
 
 5. All 3 subscribers are now ready to receive messages
 
+### Transactional Outbox Pattern Subscribers
+
+1. Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository, then to the `NEMS_Test_Harness` directory
+
+
+2. To build the 3 subscriber application, change directory to `/NEMS_Test_Subscriber_TOP`:
+
+    ```
+    cd NEMS_Test_Subscriber_TOP
+    ```
+
+    then, run the following command:  
+
+    ```
+    <# Linux/MacOs #>
+    ./mvnw clean package -DskipTests
+
+    <# Windows #>
+    .\mvnw clean package -DskipTests
+    ```
+
+
+3. Once the build is successful, change back to the cloned repository's directory, then run this command to deploy it as a docker container:
+
+    ```
+    docker-compose -f docker-compose_subscribers_top.yml up --build -d
+    ```
+
+4. 7 containers should now be running:
+    * `test-sub-birth-queue`: where a spring-boot api image, built using a Dockerfile, is containerized. This container is responsible for consuming timestamped messages as events and them logging them to the console. This subscriber listens to the `Birth` Queue.
+    * `test-sub-death-queue`: another subscriber container with one key difference: This subscriber listens to the `Death` Queue.
+    * `test-sub-enrollment-queue`: another subscriber container with one key difference: This subscriber listens to the `Enrollment` Queue.
+    * `db-birth-q-outbox`: outbox database for the `test-sub-birth-queue` container
+    * `db-death-q-outbox`: outbox database for the `test-sub-death-queue` container
+    * `db-enrollment-q-outbox`: outbox database for the `test-sub-enrollment-queue` container
+    * `pgadmin`: a container that allows users to view the deployed postgres databases
+
+
+5. All 3 subscriber containers are now ready to receive messages
 
 
 ## Verifying our Solution publishing and consuming birth events
@@ -129,17 +172,17 @@ Using Postman:
     {
         "topic": "root/nems/birth",
         "payload": [{
-            "nhi": "",
+            "nhi": "ABC1234",
             "birth_date": "3/29/2024"
             }, {
-            "nhi": "",
+            "nhi": "DEF2345",
             "birth_date": "1/2/2024"
             }, {
-            "nhi": "",
+            "nhi": "GH43456",
             "birth_date": "3/31/2024"
-            }, {
-            "nhi": "",
-            "birth_date": "7/17/2023"
+            },{
+            "nhi": "Jeremy",
+            "birth_date": "11/20/2023"
             }],
         "interval": 3
     }
@@ -149,7 +192,7 @@ Using Postman:
 
 3. Send the request. You should receive a 200 OK response and a response body echoing your request body's parameters: 
     ```
-    new Message(s) received:[{"nhi":"","birth_date":"3/29/2024"}, {"nhi":"","birth_date":"1/2/2024"}, {"nhi":"","birth_date":"3/31/2024"}, {"nhi":"","birth_date":"7/17/2023"}]
+    new Message(s) received:[{"nhi":"ABC1234","birth_date":"3/29/2024"}, {"nhi":"DEF45","birth_date":"1/2/2024"}, {"nhi":"GH43456","birth_date":"3/31/2024"}, {"nhi":"Jeremy","birth_date":"7/17/2023"}]
     to send to topic: 
     root/nems/birth
     with interval: 
@@ -165,21 +208,80 @@ Once the publisher received the event successfully, the events will be processed
 
     ```
     docker container logs test-sub-birth-queue
-    ```
+    ``` 
 
-2. Observe the logs of the container, the final 8 lines should display the following (Note: the timestamps will be different from the ones below):
+2. Observe the logs of the container, the final 8 lines should display either of the following text (Note: the timestamps will be different from the ones below):
+
     ```
+    <!-- Using Default Subscribers -->
+
     A message was received @ 2024-07-08 21:35:59:411
-    Content: {"nhi":"","birth_date":"3/29/2024"}
+    Content: {"nhi":"ABC1234","birth_date":"3/29/2024"}
     A message was received @ 2024-07-08 21:36:02:426
-    Content: {"nhi":"","birth_date":"1/2/2024"}
+    Content: {"nhi":"DEF2345","birth_date":"1/2/2024"}
     A message was received @ 2024-07-08 21:36:05:429
-    Content: {"nhi":"","birth_date":"3/31/2024"}
+    Content: {"nhi":"GH43456","birth_date":"3/31/2024"}
     A message was received @ 2024-07-08 21:36:08:433
-    Content: {"nhi":"","birth_date":"7/17/2023"}
+    Content: {"nhi":"Jeremy","birth_date":"11/20/2023"}
     ```
 
-3. You may repeat the instructions above using the `Send Death Event` and using the `docker container logs test-sub-death-queue` command, as well as the `Send Enrollment Event` and using the `docker container logs test-sub-enrollment-queue` command to verify the death and enrollment queues and associated subscriber microservices.
+    ```
+    <!-- Using Transactional Outbox Pattern Subscribers -->
+
+     -----
+    A message was received @ 2024-08-14 03:35:02:052
+    Content: {"nhi":"ABC1234","birth_date":"3/29/2024"}
+
+    The NHI number has been validated and the message will be passed on (Mock) and deleted from outbox repository
+     -----
+    A message was received @ 2024-08-14 03:35:05:234
+    Content: {"nhi":"DEF2345","birth_date":"1/2/2024"}
+
+    The NHI number has been validated and the message will be passed on (Mock) and deleted from outbox repository
+     -----
+    A message was received @ 2024-08-14 03:35:08:247
+    Content: {"nhi":"GH43456","birth_date":"3/31/2024"}
+
+    The NHI number has been deemed invalid. This can be because it is either formatted incorrectly or is not present
+    The message will now be deemed as failed
+     -----
+    A message was received @ 2024-08-14 03:35:11:263
+    Content: {"nhi":"Jeremy","birth_date":"11/20/2023"}
+    
+    The NHI number has been deemed invalid. This can be because it is either formatted incorrectly or is not present
+    The message will now be deemed as failed
+    ```
+
+3. You may repeat the instructions above using the `Send Death Event` and  the `docker container logs test-sub-death-queue` command, as well as the `Send Enrollment Event` and the `docker container logs test-sub-enrollment-queue` command to verify the death and enrollment queues and associated subscriber microservices.
+
+## Checking the Postgres Database(s) using pgAdmin
+
+> #### This section is only relevant for the Transactional Outbox Pattern subscriber microservices.
+
+Each message received by Transactional Outbox Pattern subscribers are first written to a postgres database, then are deleted from the database or marked as `failed` depending on how whether it is successfully pushed to a consuming application (in this project the consuming application is mocked, considering if the provided NHI number conforms to the format: AAANNNN (3 alpha, 4 numeric)).
+
+We will keep using the same 4 example messages as in [this](#using-the-api-with-postman) section. Only 2 of these messages will have correctly formatted NHI numbers: this means that 2 messages will remain in the Postgres database. To read these database entries, we can use the `pgadmin` container.
+
+You can access the pgAdmin dashboard at [http://localhost:5050/](http://localhost:5050/)
+1. Login using the pgadmin service environment variables defined in the `docker-compose.yml` file:
+    * The email address field is defined under the environment variable `PGADMIN_DEFAULT_EMAIL`
+    * The password field is defined under the environment variable `PGADMIN_DEFAULT_PASSWORD`
+
+2. After you're successfully logged in, click on `Add New Server` on the Dashboard Home Page:
+    * In the General tab, name your server as you see fit
+    * Navigate to the Connection tab
+    * For the `host name/address`, use the name of the Postgres container `db-birth-q-outbox`
+    * Make sure the port field is `5432`
+    * the `Username` field is defined by the `POSTGRES_USER` environment variable in the `docker-compose.yml` file for the `db-birth-q-outbox` container
+    * the `Password` field is defined by the `POSTGRES_PASSWORD` environment variable in the `docker-compose.yml` file for the `db-birth-q-outbox` container
+    * Click save and, in the Object explorer, under Servers you should see your newly saved server
+
+3. If you now navigate in the Object Explorer to `Servers>{name you gave the database server}>Databases>admin`, you will find this is the Postgres database holding the `outbox_table` table. To view all entries in the table, select the Query tool in the `Tools` tab, then type and run the following SQL query: 
+    ```SQL
+    SELECT * FROM outbox_table
+    ```
+
+4. You should see 2 entries, they should have the NHI Numbers `GH43456` and `Jeremy` and both have a status field of `failed`
 
 
 ## Stopping the container
@@ -192,6 +294,9 @@ docker-compose -f docker-compose_solace.yml down
 <# Stop Publisher Microservice #>
 docker-compose -f docker-compose_publisher.yml down
 
-<# Stop Subscribers Microservice #>
+<# Stop Subscriber Microservices #>
 docker-compose -f docker-compose_subscribers.yml down
+
+<# Stop Transactional Outbox Pattern Subscriber Microservices #>
+docker-compose -f docker-compose_subscribers_top.yml down
 ```
