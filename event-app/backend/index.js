@@ -95,7 +95,8 @@ app.post('/send-message', async (req, res) => {
 
   try {
     console.log('Payload to Test Publisher:', JSON.stringify(message, null, 2)); // Log the payload
-    await axios.post(`${process.env.REACT_APP_TEST_PUBLISHER_URL}`, message, {
+      await axios.post(`${process.env.TEST_PUBLISHER_URL}`, message, {
+
       headers: { 'Content-Type': 'application/json' },
     });
     res.status(200).json({ status: 'Message sent to Test Publisher' });

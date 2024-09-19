@@ -6,9 +6,9 @@ services:
       context: ./frontend
     container_name: event-app-frontend
     ports:
-      - "3000:3000"
+      - "3001:3000"
     networks:
-      - nems_test_harness_common-network
+      - nems_test_harness_common-network  # Use only this network to communicate with test-publisher
     env_file:
       - .env
 
@@ -19,7 +19,7 @@ services:
     ports:
       - "5001:5000"
     networks:
-      - nems_test_harness_common-network
+      - nems_test_harness_common-network  # Use only this network to communicate with test-publisher
     env_file:
       - .env
     depends_on:
@@ -34,7 +34,7 @@ services:
       POSTGRES_DB: eventsdb
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - ./event-app/init-db:/docker-entrypoint-initdb.d
+      - ./init-db:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     networks:
@@ -55,7 +55,7 @@ services:
 
 networks:
   nems_test_harness_common-network:
-    external: true
+    external: true  # Use the existing external network where test-publisher is located
 
 volumes:
   postgres-data:
