@@ -80,6 +80,12 @@
 
 ## Deploying 3 Subscriber Microservices
 
+In this section, you will be deploying microservices to consume messages from the Solace broker.
+
+> ### NOTE:
+> Only deploy <u>**ONE**</u> kind of subscriber microservice. Deploying both is very likely to cause problems with regards to message consumption
+ 
+
 ### Default Subscribers
 
 1. Using a Command Line Interface of your choosing, change directory to the downloaded/cloned repository, then to the `NEMS_Test_Harness` directory
