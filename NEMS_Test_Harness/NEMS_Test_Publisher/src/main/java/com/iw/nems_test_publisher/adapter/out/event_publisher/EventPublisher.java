@@ -12,7 +12,7 @@ import com.iw.nems_test_publisher.application.port.out.GetEventPort;
 import com.solace.messaging.MessagingService;
 import com.solace.messaging.publisher.OutboundMessage;
 import com.solace.messaging.publisher.OutboundMessageBuilder;
-import com.solace.messaging.publisher.PersistentMessagePublisher;
+import com.solace.messaging.publisher.DirectMessagePublisher;
 import com.solace.messaging.resources.Topic;
 
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EventPublisher implements GetEventPort {
 
-    private final PersistentMessagePublisher publisher;
+    private final DirectMessagePublisher publisher;
     private final MessagingService messagingService = EventUtil.ConnectBasic();
 
     private static final Logger logger = LogManager.getLogger();
