@@ -22,6 +22,7 @@ public class PlaceholderPort implements GetMessagePort {
 
         System.out.println("A message was received @ " + df.format(timeStampedMessage.getTimeStamp()));
         System.out.println("Content: " + timeStampedMessage.getContent());
+        System.out.println("Headers: " + timeStampedMessage.getHeaders());
         System.out.println("");
 
         if(MockNHIParser.isValid(messageNhi)){

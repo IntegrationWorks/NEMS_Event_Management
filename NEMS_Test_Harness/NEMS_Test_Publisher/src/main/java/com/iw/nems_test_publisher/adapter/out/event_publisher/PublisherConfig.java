@@ -53,7 +53,7 @@ public class PublisherConfig {
     public void onDestroy(){
         System.out.println("Callback Triggered - @PreDestroy");
         System.out.println("Disconnecting publisher...");
-        publisher.terminate(1500);
+        publisher.terminate(500);
         messagingService.disconnect();
     }
 

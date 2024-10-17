@@ -2,6 +2,7 @@ package com.iw.nems_test_subscriber_top.adapter.in.event_subscriber;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 
@@ -25,6 +26,8 @@ public class EventListener {
 
     public long processEvent(InboundMessage message){
 
+        Map<String, String> messageProperties = message.getProperties();
+
         long newMessageId = -1;
 
         String jsonString = message.getPayloadAsString();
@@ -37,6 +40,7 @@ public class EventListener {
 
         try {
             TimeStampedMessage tsMessage = mapper.readerFor(TimeStampedMessage.class).readValue(jsonString);
+            tsMessage.setHeaders(messageProperties);
             if(replicationGroupMessageId != null){
                 newMessageId = outboxManagementUseCase.writeMessageToDb(tsMessage, replicationGroupMessageId);
             }

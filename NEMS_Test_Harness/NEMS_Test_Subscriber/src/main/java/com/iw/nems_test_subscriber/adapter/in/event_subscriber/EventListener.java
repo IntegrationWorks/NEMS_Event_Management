@@ -2,6 +2,7 @@ package com.iw.nems_test_subscriber.adapter.in.event_subscriber;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 
@@ -23,8 +24,9 @@ public class EventListener {
     PersistentMessageReceiver receiver;
 
     public void processEvent(InboundMessage message){
+        Map<String, String> messageProperties = message.getProperties();
+
         String jsonString = message.getPayloadAsString();
-        // String jsonString = objectString.replace("TimeStampedMessage{ \"","{\"");
 
         ObjectMapper mapper = new ObjectMapper();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
@@ -32,6 +34,7 @@ public class EventListener {
 
         try {
             TimeStampedMessage tsMessage = mapper.readerFor(TimeStampedMessage.class).readValue(jsonString);
+            tsMessage.setHeaders(messageProperties);
             sendEventMessageCase.SendEventPayload(tsMessage);
 
         } catch (IOException e) {
