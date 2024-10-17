@@ -177,32 +177,79 @@ Using Postman:
     ```json
     {
         "topic": "root/nems/birth",
-        "payload": [{
-            "nhi": "ABC1234",
-            "birth_date": "3/29/2024"
-            }, {
-            "nhi": "DEF2345",
-            "birth_date": "1/2/2024"
-            }, {
-            "nhi": "GH43456",
-            "birth_date": "3/31/2024"
-            },{
-            "nhi": "Jeremy",
-            "birth_date": "11/20/2023"
-            }],
-        "interval": 3
+        "messages": [
+            {
+                "content": {
+                    "nhi": "ABC1234",
+                    "birth_date": "3/29/2024"
+                },
+                "add-headers": {
+                    "header-02": "Hello",
+                    "header-03": "World"
+                }
+            },
+            {
+                "content": {
+                    "nhi": "DEF2345",
+                    "birth_date": "1/2/2024"
+                },
+                "add-headers": {
+                    "header-02": "Arbitrary",
+                    "header-03": "Sentence",
+                    "header-04": "For Testing"
+                }
+            },
+            {
+                "content": {
+                    "nhi": "GH43456",
+                    "birth_date": "3/31/2024"
+                },
+                "add-headers": {
+                    "header-02": "Goodbye",
+                    "header-03": "Blue Sky"
+                }
+            },
+            {
+                "content": {
+                    "nhi": "Jeremy",
+                    "birth_date": "3/29/2024"
+                }
+            }
+        ],
+        "interval": 1
     }
     ``` 
-
     You can change these fields as you see fit.
+
+    The `Headers` tab should also show 2 headers of note:
+    * `sol-Test-Header`: `Hello World`
+    * `sol-Test-Header-1`: `This is more test data`
+
+    These headers are used to define message headers for an entire batch of messages, as defined in the request body. You may add more headers, just make sure to add the prefix `sol-` to the `key` so that the Publisher microservice assigns it as a message header.
+
 
 3. Send the request. You should receive a 200 OK response and a response body echoing your request body's parameters: 
     ```
-    new Message(s) received:[{"nhi":"ABC1234","birth_date":"3/29/2024"}, {"nhi":"DEF45","birth_date":"1/2/2024"}, {"nhi":"GH43456","birth_date":"3/31/2024"}, {"nhi":"Jeremy","birth_date":"7/17/2023"}]
+    new Message(s) received:
+    ######
+    [{
+    "nhi" : "ABC1234",
+    "birth_date" : "3/29/2024"
+    }, {
+    "nhi" : "DEF2345",
+    "birth_date" : "1/2/2024"
+    }, {
+    "nhi" : "GH43456",
+    "birth_date" : "3/31/2024"
+    }, {
+    "nhi" : "Jeremy",
+    "birth_date" : "3/29/2024"
+    }]
+    ######
     to send to topic: 
     root/nems/birth
     with interval: 
-    3.0
+    1.0
     they are being sent on an asynchronous thread and will be accessible shortly.
     ``` 
 
@@ -221,39 +268,47 @@ Once the publisher received the event successfully, the events will be processed
     ```
     <!-- Using Default Subscribers -->
 
-    A message was received @ 2024-07-08 21:35:59:411
+    A message was received @ 2024-10-17 22:14:10:029
     Content: {"nhi":"ABC1234","birth_date":"3/29/2024"}
-    A message was received @ 2024-07-08 21:36:02:426
+    Metadata: {test-header=Hello World, test-header-1=This is more test data, header-02=Hello, header-03=World}
+    A message was received @ 2024-10-17 22:14:11:113
     Content: {"nhi":"DEF2345","birth_date":"1/2/2024"}
-    A message was received @ 2024-07-08 21:36:05:429
+    Metadata: {test-header=Hello World, test-header-1=This is more test data, header-02=Arbitrary, header-03=Sentence, header-04=For Testing}
+    A message was received @ 2024-10-17 22:14:12:123
     Content: {"nhi":"GH43456","birth_date":"3/31/2024"}
-    A message was received @ 2024-07-08 21:36:08:433
-    Content: {"nhi":"Jeremy","birth_date":"11/20/2023"}
+    Metadata: {test-header=Hello World, test-header-1=This is more test data, header-02=Goodbye, header-03=Blue Sky}
+    A message was received @ 2024-10-17 22:14:13:135
+    Content: {"nhi":"Jeremy","birth_date":"3/29/2024"}
+    Metadata: {test-header=Hello World, test-header-1=This is more test data}
     ```
 
     ```
     <!-- Using Transactional Outbox Pattern Subscribers -->
 
-     -----
-    A message was received @ 2024-08-14 03:35:02:052
+     ----- 
+    A message was received @ 2024-10-17 22:26:28:756
     Content: {"nhi":"ABC1234","birth_date":"3/29/2024"}
+    Headers: {test-header=Hello World, test-header-1=This is more test data, header-02=Hello, header-03=World}
 
     The NHI number has been validated and the message will be passed on (Mock) and deleted from outbox repository
-     -----
-    A message was received @ 2024-08-14 03:35:05:234
+    ----- 
+    A message was received @ 2024-10-17 22:26:29:878
     Content: {"nhi":"DEF2345","birth_date":"1/2/2024"}
+    Headers: {test-header=Hello World, test-header-1=This is more test data, header-02=Arbitrary, header-03=Sentence, header-04=For Testing}
 
     The NHI number has been validated and the message will be passed on (Mock) and deleted from outbox repository
-     -----
-    A message was received @ 2024-08-14 03:35:08:247
+    ----- 
+    A message was received @ 2024-10-17 22:26:30:898
     Content: {"nhi":"GH43456","birth_date":"3/31/2024"}
+    Headers: {test-header=Hello World, test-header-1=This is more test data, header-02=Goodbye, header-03=Blue Sky}
 
     The NHI number has been deemed invalid. This can be because it is either formatted incorrectly or is not present
     The message will now be deemed as failed
-     -----
-    A message was received @ 2024-08-14 03:35:11:263
-    Content: {"nhi":"Jeremy","birth_date":"11/20/2023"}
-    
+    ----- 
+    A message was received @ 2024-10-17 22:26:31:911
+    Content: {"nhi":"Jeremy","birth_date":"3/29/2024"}
+    Headers: {test-header=Hello World, test-header-1=This is more test data}
+
     The NHI number has been deemed invalid. This can be because it is either formatted incorrectly or is not present
     The message will now be deemed as failed
     ```
@@ -262,7 +317,7 @@ Once the publisher received the event successfully, the events will be processed
 
 ## Checking the Postgres Database(s) using pgAdmin
 
-> #### This section is only relevant for the Transactional Outbox Pattern subscriber microservices.
+> #### <u>This section is only relevant for the Transactional Outbox Pattern subscriber microservices. </u>
 
 Each message received by Transactional Outbox Pattern subscribers are first written to a postgres database, then are deleted from the database or marked as `failed` depending on how whether it is successfully pushed to a consuming application (in this project the consuming application is mocked, considering if the provided NHI number conforms to the format: AAANNNN (3 alpha, 4 numeric)).
 
@@ -294,9 +349,6 @@ You can access the pgAdmin dashboard at [http://localhost:5050/](http://localhos
 
 To stop the docker containers, run the following commands: 
 ```
-<# Stop Solace Broker #>
-docker-compose -f docker-compose_solace.yml down
-
 <# Stop Publisher Microservice #>
 docker-compose -f docker-compose_publisher.yml down
 
@@ -305,4 +357,7 @@ docker-compose -f docker-compose_subscribers.yml down
 
 <# Stop Transactional Outbox Pattern Subscriber Microservices #>
 docker-compose -f docker-compose_subscribers_top.yml down
+
+<# Stop Solace Broker. Always do so last #>
+docker-compose -f docker-compose_solace.yml down
 ```
