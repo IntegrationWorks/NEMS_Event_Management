@@ -9,7 +9,6 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException.BadRequest;
 
 import com.iw.nems_test_publisher.application.domain.model.EventPayload;
 import com.iw.nems_test_publisher.application.port.in.SendEventUseCase;
