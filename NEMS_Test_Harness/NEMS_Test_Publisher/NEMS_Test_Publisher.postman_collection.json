@@ -119,13 +119,12 @@
 							{
 								"key": "sol-Test-Header-1",
 								"value": "This is more test data",
-								"type": "text",
-								"disabled": true
+								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"topic\": \"root/nems/birth\",\r\n    \"messages\": [\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"ABC1234\",\r\n                \"birth_date\": \"3/29/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Hello\",\r\n                \"header-03\": \"World\"\r\n            }\r\n        },\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"DEF2345\",\r\n                \"birth_date\": \"1/2/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Arbitrary\",\r\n                \"header-03\": \"Sentence\",\r\n                \"header-04\": \"For Testing\"\r\n            }\r\n        },\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"GH43456\",\r\n                \"birth_date\": \"3/31/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Goodbye\",\r\n                \"header-03\": \"Blue Sky\"\r\n            }\r\n        },\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"Jeremy\",\r\n                \"birth_date\": \"3/29/2024\"\r\n            }\r\n        }\r\n    ],\r\n    \"interval\": 1\r\n}",
+							"raw": "{\r\n    \"topic\": \"root/nems/birth\",\r\n    \"messages\": [\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"ABC1234\",\r\n                \"birth_date\": \"3/29/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Hello\",\r\n                \"header-03\": \"World\"\r\n            }\r\n        }\r\n    ],\r\n    \"payload\": [{\r\n\t\t  \"nhi\": \"ABC1234\",\r\n\t\t  \"birth_date\": \"3/29/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"DEF2345\",\r\n\t\t  \"birth_date\": \"1/2/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"GH43456\",\r\n\t\t  \"birth_date\": \"3/31/2024\"\r\n        },{\r\n\t\t  \"nhi\": \"Jeremy\",\r\n\t\t  \"birth_date\": \"11/20/2023\"\r\n\t\t}],\r\n    \"interval\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -160,8 +159,7 @@
 					{
 						"key": "sol-Test-Header-1",
 						"value": "This is more test data",
-						"type": "text",
-						"disabled": true
+						"type": "text"
 					}
 				],
 				"body": {
