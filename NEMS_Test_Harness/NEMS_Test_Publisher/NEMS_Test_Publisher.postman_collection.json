@@ -7,13 +7,166 @@
 	},
 	"item": [
 		{
+			"name": "Legacy Requests",
+			"item": [
+				{
+					"name": "Send Birth Event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "sol-Test-Header",
+								"value": "Hello World",
+								"type": "text"
+							},
+							{
+								"key": "sol-Test-Header-1",
+								"value": "This is more test data",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"topic\": \"root/nems/birth\",\r\n    \"payload\": [{\r\n\t\t  \"nhi\": \"ABC1234\",\r\n\t\t  \"birth_date\": \"3/29/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"DEF2345\",\r\n\t\t  \"birth_date\": \"1/2/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"GH43456\",\r\n\t\t  \"birth_date\": \"3/31/2024\"\r\n        },{\r\n\t\t  \"nhi\": \"Jeremy\",\r\n\t\t  \"birth_date\": \"11/20/2023\"\r\n\t\t}],\r\n    \"interval\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Death Event",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"topic\": \"root/nems/death\",\r\n    \"payload\": [{\r\n\t\t  \"nhi\": \"ABC01234\",\r\n\t\t  \"death_date\": \"3/29/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"DEF2345\",\r\n\t\t  \"death_date\": \"1/2/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"GHI3456\",\r\n\t\t  \"death_date\": \"3/31/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"JKL4567\",\r\n\t\t  \"death_date\": \"7/17/2023\"\r\n\t\t}],\r\n    \"interval\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Enrollment Event",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"topic\": \"root/nems/enrollment\",\r\n    \"payload\": [{\r\n\t\t  \"nhi\": \"ABC1234\",\r\n\t\t  \"facility_id\": \"1234\",\r\n\t\t  \"enrollment_date\": \"3/29/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"DEF2345\",\r\n\t\t  \"facility_id\": \"6578\",\r\n\t\t  \"enrollment_date\": \"1/2/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"GHI3456\",\r\n\t\t  \"facility_id\": \"1679\",\r\n\t\t  \"enrollment_date\": \"3/31/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"Michael\",\r\n\t\t  \"facility_id\": \"3248\",\r\n\t\t  \"enrollment_date\": \"7/17/2023\"\r\n\t\t}],\r\n    \"interval\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DEBUG",
+			"item": [
+				{
+					"name": "DEBUG - Send Birth Event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "sol-Test-Header",
+								"value": "Hello World",
+								"type": "text"
+							},
+							{
+								"key": "sol-Test-Header-1",
+								"value": "This is more test data",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"topic\": \"root/nems/birth\",\r\n    \"messages\": [\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"ABC1234\",\r\n                \"birth_date\": \"3/29/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Hello\",\r\n                \"header-03\": \"World\"\r\n            }\r\n        },\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"DEF2345\",\r\n                \"birth_date\": \"1/2/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Arbitrary\",\r\n                \"header-03\": \"Sentence\",\r\n                \"header-04\": \"For Testing\"\r\n            }\r\n        },\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"GH43456\",\r\n                \"birth_date\": \"3/31/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Goodbye\",\r\n                \"header-03\": \"Blue Sky\"\r\n            }\r\n        },\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"Jeremy\",\r\n                \"birth_date\": \"3/29/2024\"\r\n            }\r\n        }\r\n    ],\r\n    \"interval\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Send Birth Event",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "sol-Test-Header",
+						"value": "Hello World",
+						"type": "text"
+					},
+					{
+						"key": "sol-Test-Header-1",
+						"value": "This is more test data",
+						"type": "text",
+						"disabled": true
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"topic\": \"root/nems/birth\",\r\n    \"payload\": [{\r\n\t\t  \"nhi\": \"ABC1234\",\r\n\t\t  \"birth_date\": \"3/29/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"DEF2345\",\r\n\t\t  \"birth_date\": \"1/2/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"GH43456\",\r\n\t\t  \"birth_date\": \"3/31/2024\"\r\n        },{\r\n\t\t  \"nhi\": \"Jeremy\",\r\n\t\t  \"birth_date\": \"11/20/2023\"\r\n\t\t}],\r\n    \"interval\": 3\r\n}",
+					"raw": "{\r\n    \"topic\": \"root/nems/birth\",\r\n    \"messages\": [\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"ABC1234\",\r\n                \"birth_date\": \"3/29/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Hello\",\r\n                \"header-03\": \"World\"\r\n            }\r\n        },\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"DEF2345\",\r\n                \"birth_date\": \"1/2/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Arbitrary\",\r\n                \"header-03\": \"Sentence\",\r\n                \"header-04\": \"For Testing\"\r\n            }\r\n        },\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"GH43456\",\r\n                \"birth_date\": \"3/31/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Goodbye\",\r\n                \"header-03\": \"Blue Sky\"\r\n            }\r\n        },\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"Jeremy\",\r\n                \"birth_date\": \"3/29/2024\"\r\n            }\r\n        }\r\n    ],\r\n    \"interval\": 1\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -40,7 +193,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"topic\": \"root/nems/death\",\r\n    \"payload\": [{\r\n\t\t  \"nhi\": \"ABC01234\",\r\n\t\t  \"death_date\": \"3/29/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"DEF2345\",\r\n\t\t  \"death_date\": \"1/2/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"GHI3456\",\r\n\t\t  \"death_date\": \"3/31/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"JKL4567\",\r\n\t\t  \"death_date\": \"7/17/2023\"\r\n\t\t}],\r\n    \"interval\": 3\r\n}",
+					"raw": "{\r\n    \"topic\": \"root/nems/death\",\r\n    \"messages\": [\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"ABC1234\",\r\n                \"death_date\": \"3/29/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Hello\",\r\n                \"header-03\": \"World\"\r\n            }\r\n        },\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"DEF2345\",\r\n                \"death_date\": \"1/2/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Arbitrary\",\r\n                \"header-03\": \"Sentence\",\r\n                \"header-04\": \"For Testing\"\r\n            }\r\n        },\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"GH43456\",\r\n                \"death_date\": \"3/31/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Goodbye\",\r\n                \"header-03\": \"Blue Sky\"\r\n            }\r\n        },\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"Jeremy\",\r\n                \"death_date\": \"3/29/2024\"\r\n            }\r\n        }\r\n    ],\r\n    \"interval\": 1\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -67,7 +220,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"topic\": \"root/nems/enrollment\",\r\n    \"payload\": [{\r\n\t\t  \"nhi\": \"ABC1234\",\r\n\t\t  \"facility_id\": \"1234\",\r\n\t\t  \"enrollment_date\": \"3/29/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"DEF2345\",\r\n\t\t  \"facility_id\": \"6578\",\r\n\t\t  \"enrollment_date\": \"1/2/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"GHI3456\",\r\n\t\t  \"facility_id\": \"1679\",\r\n\t\t  \"enrollment_date\": \"3/31/2024\"\r\n\t\t}, {\r\n\t\t  \"nhi\": \"Michael\",\r\n\t\t  \"facility_id\": \"3248\",\r\n\t\t  \"enrollment_date\": \"7/17/2023\"\r\n\t\t}],\r\n    \"interval\": 3\r\n}",
+					"raw": "{\r\n    \"topic\": \"root/nems/enrollment\",\r\n    \"messages\": [\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"ABC1234\",\r\n                \"facility_id\": \"1234\",\r\n                \"enrollment_date\": \"3/29/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Hello\",\r\n                \"header-03\": \"World\"\r\n            }\r\n        },\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"DEF2345\",\r\n                \"facility_id\": \"6578\",\r\n                \"enrollment_date\": \"1/2/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Arbitrary\",\r\n                \"header-03\": \"Sentence\",\r\n                \"header-04\": \"For Testing\"\r\n            }\r\n        },\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"GH43456\",\r\n                \"facility_id\": \"1679\",\r\n                \"enrollment_date\": \"3/31/2024\"\r\n            },\r\n            \"add-headers\": {\r\n                \"header-02\": \"Goodbye\",\r\n                \"header-03\": \"Blue Sky\"\r\n            }\r\n        },\r\n        {\r\n            \"content\": {\r\n                \"nhi\": \"Jeremy\",\r\n                \"facility_id\": \"3248\",\r\n                \"enrollment_date\": \"3/29/2024\"\r\n            }\r\n        }\r\n    ],\r\n    \"interval\": 1\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
